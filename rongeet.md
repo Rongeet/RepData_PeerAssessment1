@@ -1,10 +1,9 @@
 ---
 title: "Analysis of Personal Movement Using Activity Monitoring Devices"
-output: html_document
+output:html documents
 ---
 **Introduction**
 It is now possible to collect a large amount of data about personal movement using activity monitoring devices such as a Fitbit, Nike Fuelband, or Jawbone Up. These type of devices are part of the “quantified self” movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. But these data remain under-utilized both because the raw data are hard to obtain and there is a lack of statistical methods and software for processing and interpreting the data.
-
 This project makes use of data from a personal activity monitoring device. This device collects data at 5 minute intervals through out the day. The data consists of two months of data from an anonymous individual collected during the months of October and November, 2012 and include the number of steps taken in 5 minute intervals each day. The goal of this project is to write a report that answers the questions detailed below.
 **Loading and preprocessing the data**
 ```{r}
@@ -35,10 +34,8 @@ median(steps_each_day$steps)
 ```{r}
 #Calculating the average
 steps_per_interval <- aggregate(data_no_NA$steps, by=list(interval=data_no_NA$interval), FUN=mean)
-
 #Adding columns names
 colnames(steps_per_interval) <- c("interval", "average_steps")
-
 #ploting the average daily activity pattern 
 plot(as.integer(levels(steps_per_interval$interval)), steps_per_interval$average_steps, type="l",
      xlab = "Interval", ylab = "Average Number of Steps", main = "Average Daily Activity Pattern",  col ="blue")
@@ -67,7 +64,6 @@ str(complete_data)
 steps_each_day_complete <- aggregate(steps ~ date, data = complete_data, sum)
 #Adding column names to the created data frame
 colnames(steps_each_day_complete) <- c("date", "steps")
-
 #Making the histogram
 hist(as.numeric(steps_each_day_complete$steps), breaks = 20, col = "red", xlab = "Number of Steps", main= "Histogram of the total number of steps taken each day")
 #Mean
@@ -76,42 +72,32 @@ mean(steps_each_day_complete$steps)
 median(steps_each_day_complete$steps)
 ```
 We notice that the mean of the complete dataset (10766) is equal to the mean of the dataset without missing values. The median of the complete dataset has shifted from 10765 to 10766. Therefore, the mean and median for the complete dataset are almost identical.
-
 **Are there differences in activity patterns between weekdays and weekends?**
 ```{r}
 #Creating a factor variable "day "to store the day of the week:
 complete_data$day <- as.factor(weekdays(complete_data$date))
-
 #Creating a logical variable "is_weekday" (weekday=TRUE, weekend = FALE) :
 complete_data$is_weekday <- ifelse(!(complete_data$day %in% c("Saturday","Sunday")), TRUE, FALSE) 
-
-
 #Calculating the average number of steps for weekdays
 weekdays_data <- complete_data[complete_data$is_weekday,]
 steps_per_interval_weekdays <- aggregate(weekdays_data$steps, by=list(interval=weekdays_data$interval), FUN=mean)
-
-
 #Calculating the average number of steps for weekends
 weekends_data <- complete_data[!complete_data$is_weekday,]
 steps_per_interval_weekends <- aggregate(weekends_data$steps, by=list(interval=weekends_data$interval), FUN=mean)
-
 #Adding columns names
 colnames(steps_per_interval_weekdays) <- c("interval", "average_steps")
 colnames(steps_per_interval_weekends) <- c("interval", "average_steps")
 #Adding a column to indecate the day
 steps_per_interval_weekdays$day <- "Weekday"
 steps_per_interval_weekends$day <- "Weekend"
-
 #Merging the two togather
 week_data <- rbind(steps_per_interval_weekends, steps_per_interval_weekdays)
 #Converting the day variabke to a factor
 week_data$day <- as.factor(week_data$day)
-
 #Making the plot
 library(lattice)
 xyplot(average_steps ~  interval | day, data = week_data, layout = c(1,2), type ="l", ylab="Number of Steps")
-       
-```
+ ```
 
 
 

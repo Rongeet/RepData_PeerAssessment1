@@ -112,7 +112,7 @@ library(lattice)
 xyplot(average_steps ~  interval | day, data = week_data, layout = c(1,2), type ="l", ylab="Number of Steps")
        
 ```
-
+knit2html()
 
 
 
